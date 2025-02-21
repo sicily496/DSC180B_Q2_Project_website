@@ -1,0 +1,236 @@
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Main grid container with 3 vertical sections */
+.pipeline-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 20% 20% 5% 55%; /* First for pipeline, second for section4, third for hover text */
+    grid-template-rows: 100px 100px 100px 100px auto auto;
+    gap: 20px; /* Space between columns */
+    position: relative;
+    align-items: start;
+}
+
+/* First vertical line: Main pipeline */
+.pipeline-sections {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Sections */
+.pipeline-section {
+    width: 100%; /* Adjust to fit within grid */
+    height: 100px;
+    background-color: hsl(204, 86%, 53%);
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+}
+
+/* Arrows */
+.arrow-container {
+    display: flex;
+    flex-direction: row-reverse; /* Text on the left of arrow */
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+}
+
+.arrow-text {
+    font-size: 14px;
+    color: #333;
+    margin-left: -100px;  /* Space between text and arrow */
+}
+
+/* Second vertical line: Section 4 aligned with Section 3 */
+.para-container {
+    grid-column: 2; /* Moves Section 4 to the second column */
+    height: 790px; /* Ensures Section 4 is on the same row as Section 3 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Section 4 */
+.para-section {
+    width: 100%; /* Match width of pipeline sections */
+    height: 100px;
+    background-color: hsl(204, 86%, 53%);
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+}
+
+.hover-text {
+    position: absolute;
+    right: 0; /* Move to the right */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30%; /* Adjust width to fit content */
+    min-height: 100px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Style Bullet Points */
+.hover-text ul {
+    list-style-type: disc; /* Use bullet points */
+    padding-left: 20px; /* Space before bullets */
+    text-align: left; /* Align text properly */
+}
+
+.hover-text li {
+    margin-bottom: 5px; /* Space between bullet points */
+}
+
+
+/* Show hover text when hovering over Section 4 */
+.para-section:hover ~ .hover-text {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Ensure visibility when JavaScript adds "visible" class */
+.pipeline-section.visible, .arrow-container.visible, .para-section.visible {
+    opacity: 1;
+    visibility: visible;
+    animation: slideDown 1s ease-out forwards;
+}
+
+/* L-Shaped Arrow: Container */
+.arrow-container.l-shape {
+    position: absolute;
+    left: calc(20% + 50px); /* Start from Section 1 */
+    top: 50px; /* Align with Section 1 */
+    width: 0px; /* Initially zero width */
+    height: 0px; /* Initially zero height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+}
+
+/* Horizontal line (→) */
+.arrow-container.l-shape::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0px; /* Initially zero */
+    height: 1.5px;
+    background-color: #333;
+    transition: width 0.6s ease-in-out;
+}
+
+/* Vertical line (↓) */
+.arrow-container.l-shape::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 60px; /* Move to end of horizontal line */
+    width: 1.5px;
+    height: 0px; /* Initially zero */
+    background-color: #333;
+    transition: height 0.6s ease-in-out 0.6s; /* Delay after horizontal line */
+}
+
+/* Arrowhead (↓ at the bottom of L) */
+.arrow.down {
+    position: absolute;
+    top: 240px; /* Align with vertical part of L */
+    left: 54.35px; /* Position at the bottom */
+    font-size: 20px;
+    color: #333;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.2s ease-in-out 1.2s; /* Appear after the vertical line */
+}
+
+/* ✅ Add Text Beside the Vertical Line */
+.arrow-text-middle {
+    position: absolute;
+    left: 80px; /* Adjust to position next to the vertical arrow */
+    top: 130px; /* Adjust to be in the middle of the vertical part */
+    transform: translateY(-50%); /* Center vertically */
+    font-size: 14px;
+    color: #333;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.6s ease-in-out 1.2s; /* Appear with the vertical line */
+}
+
+/* Animation Triggers */
+
+/* Step 1: Make Arrow Visible */
+.arrow-container.l-shape.visible {
+    opacity: 1;
+}
+
+/* Step 2: Expand Horizontal Line */
+.arrow-container.l-shape.visible::before {
+    width: 60px; /* Expand horizontal */
+}
+
+/* Step 3: Drop Vertical Line */
+.arrow-container.l-shape.visible::after {
+    height: 250px; /* Expand vertical */
+}
+
+/* Step 4: Show Arrowhead */
+.arrow-container.l-shape.visible .arrow.down {
+    opacity: 1;
+}
+
+/* Step 5: Show Middle Text */
+.arrow-container.l-shape.visible .arrow-text-middle {
+    opacity: 1;
+}
+
+/* Darken Background When Hovering */
+.pipeline-section:hover, 
+.para-section:hover {
+    background-color: hsl(204, 86%, 40%); /* Darker blue */
+    transition: background-color 0.3s ease-in-out;
+}
