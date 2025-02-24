@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const mainFlow = [
+        document.getElementById("arrow3"),
         document.getElementById("arrow1"),
         document.getElementById("section2"),
         document.getElementById("arrow2"),
@@ -7,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
 
     const parallelFlow = [
-        document.getElementById("arrow3"), // L-Shaped Arrow (Appears at total time of main flow)
+        //document.getElementById("arrow3"), // L-Shaped Arrow (Appears at total time of main flow)
         document.getElementById("section4"),
     ];
 
@@ -46,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("scroll", revealOnScroll);
 
     // Check if Section1 is already visible
-    revealOnScroll();
+    //revealOnScroll();
 });
 
 
