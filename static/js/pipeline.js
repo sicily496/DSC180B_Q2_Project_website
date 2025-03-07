@@ -51,34 +51,44 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// Hover Effect for Info Box (for All Sections with Bullet Points)
 document.addEventListener("DOMContentLoaded", function () {
-    const sections = document.querySelectorAll(".pipeline-section, .para-section"); // Select all sections
+    const sections = document.querySelectorAll(".pipeline-section, .para-section");
     const hoverBox = document.querySelector(".hover-text");
 
     sections.forEach(section => {
+        // Handle touch start
+        section.addEventListener("touchstart", function (event) {
+            showHoverContent(this); // Call the function to show hover content
+            event.preventDefault(); // Prevent the window from scrolling
+        }, { passive: false });
+
+        // Handle mouse enter
         section.addEventListener("mouseenter", function () {
-            // Get the data-text attribute and format it as bullet points
-            const hoverContent = section.getAttribute("data-text");
+            showHoverContent(this);
+        });
 
+        // Common function to set hover content
+        function showHoverContent(target) {
+            const hoverContent = target.getAttribute("data-text");
             if (hoverContent) {
-                const bulletPoints = hoverContent
-                    .split("\n") // Split text by new line
-                    .map(item => `<li>${item.trim()}</li>`) // Wrap each line in <li> tags
-                    .join(""); // Combine back into a list
-
-                hoverBox.innerHTML = `<ul>${bulletPoints}</ul>`; // Set as unordered list
+                const bulletPoints = hoverContent.split("\n")
+                    .map(item => `<li>${item.trim()}</li>`)
+                    .join("");
+                hoverBox.innerHTML = `<ul>${bulletPoints}</ul>`;
             }
-
-            // Show hover box
             hoverBox.style.opacity = "1";
             hoverBox.style.visibility = "visible";
-        });
+        }
 
-        section.addEventListener("mouseleave", function () {
-            // Hide hover box
+        // Handle touch end and mouse leave
+        section.addEventListener("touchend", hideHoverContent);
+        section.addEventListener("mouseleave", hideHoverContent);
+
+        // Common function to hide hover content
+        function hideHoverContent() {
             hoverBox.style.opacity = "0";
             hoverBox.style.visibility = "hidden";
-        });
+        }
     });
 });
+

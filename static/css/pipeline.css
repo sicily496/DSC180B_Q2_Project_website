@@ -200,9 +200,9 @@
 /* Arrowhead (↓ at the bottom of L) */
 .arrow.down {
     position: absolute;
-    top: calc(23vh); /* Adjust top to align exactly at the end of the vertical line */
-    left: 6vh; /* Adjust left to center the arrowhead under the vertical line */
-    transform: translateX(50%); /* Centering correction */
+    top: calc(23vh); /* Align exactly at the end of the vertical line */
+    left: calc(7.5vh); /* Adjust left to align directly under the end of the vertical line */
+    transform: translateX(-50%); /* Adjust horizontally to center the arrowhead */
     font-size: 2.5vh;
     color: #333;
     opacity: 0; /* Start hidden */
