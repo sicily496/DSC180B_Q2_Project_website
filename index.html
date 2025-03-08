@@ -55,7 +55,7 @@
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">Balancing Accuracy and Efficiency: A Comparative Study
+            <h1 class="title is-2 publication-title">Balancing Accuracy and Efficiency: A Comparative Study
               of Knowledge Distillation and Post-Training Quantization
               Sequences</h1>
             <div class="is-size-5 publication-authors">
@@ -97,7 +97,7 @@
 
                     <!-- Supplementary PDF link -->
                     <span class="link-block">
-                      <a href="static/pdfs/supplementary_material.pdf" target="_blank"
+                      <a href="static/pdfs/poster.pdf" target="_blank"
                       class="external-link button is-normal is-rounded is-dark">
                       <span class="icon">
                         <i class="fas fa-file-pdf"></i>
@@ -128,16 +128,16 @@
 
 <!-- Paper introduction -->
 <section class="section hero is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
+    <div class="container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
         <h2 class="title is-3">Introduction</h2>
         <div class="content has-text-justified">
           <p>
             Deep neural networks (DNNs) have become the cornerstone of modern machine
 learning, but often demand extensive computational resources. To address this gap,
-model compression techniques have emerged as a vital area of research, aiming to reduce computational and storage overhead while preserving accuracy. Existing methods, such as quantization (reducing numerical precision of weights) and knowledge distillation (transferring knowledge from a large ”teacher” model to a compact ”student”
-model), have shown promise individually. However, the interplay between these techniques—particularly their combined impact on accuracy, storage efficiency, and inference speed—remains underexplored. In this project, we propose a hybrid compression
+model compression techniques have emerged as a vital area of research, aiming to reduce computational and storage overhead while preserving accuracy. Existing methods, such as knowledge distillation (transferring knowledge from a large ”teacher” model to a compact ”student”
+model) and quantization (reducing numerical precision of weights), have shown promise individually. However, the interplay between these techniques—particularly their combined impact on accuracy, storage efficiency, and inference speed—remains underexplored. In this project, we propose a hybrid compression
 strategy that systematically integrates knowledge distillation and post-training quantization to optimize the trade-off between model efficiency and performance.
         </div>
       </div>
@@ -183,9 +183,24 @@ strategy that systematically integrates knowledge distillation and post-training
 </section>
 <!-- End dataset -->
 
+<!-- Paper question -->
+<section class="section hero is-light">
+    <div class="container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+        <h2 class="title is-3">Research Question</h2>
+        <div class="content has-text-justified">
+          <p>The primary inquiry of this research is to determine if a hybrid compression strategy, integrating Knowledge Distillation with Quantization, outperforms a singular approach.</p>
+          <p style="color: #3273dc;"><strong>Specific Question: Does quantizing a student model, derived through Knowledge Distillation, achieve greater efficiency than quantizing the teacher model?</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End question -->
 
 <!-- Paper method -->
-<section class="hero is-small is-light">
+<section class="hero is-small is-small">
   <div class="hero-body">
     <div class="container">
       <!-- Paper video. -->
@@ -264,7 +279,6 @@ strategy that systematically integrates knowledge distillation and post-training
               Computational resources: More demanding\n
             </div>
         </div>
-        
     </div>
   </div>
 </section>
@@ -272,42 +286,59 @@ strategy that systematically integrates knowledge distillation and post-training
 
 
 <!-- Paper method -->
-<section class="hero is-small">
-  <div class="hero-body">
+<section class="section hero is-light">
     <div class="container">
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
-          <h2 class="title is-3">Method</h2>
+        <h2 class="title is-3">Method</h2>
           <div class="content has-text-justified">
-          <p>We initially began testing with a classical knowledge distillation method, where we
-            worked to distill a ResNet50 model into a ResNet18 model. From this classical
-            model, we each implemented a unique method that modifies the existing algorithm
-            to improve overall efficiency
+          <p>Initially, we assess various KD techniques, then apply a greedy path-following quantization algorithm to reduce the student model's bit size. 
+            The subsequent sections detail the processes of knowledge distillation and quantization separately.
           </p>
           <h4>KD Strategies</h4>
           <ul>
-              <li>
-                  <strong>Mixup:</strong>
-                  <p>Generated interpolated training samples via linear blending of image-label pairs (Beta distribution) to enhance feature diversity and decision boundary smoothness.</p>
+            <li>
+              <strong>Vanilla Knowledge Distillation (VKD):</strong>
+              <p>This strategy employs a hybrid loss combining cross-entropy from ground-truth labels (<i>L<sub>C</sub></i>) and Kullback-Leibler divergence from the teacher’s soft targets (<i>D<sub>KL</sub></i>), refined with temperature scaling <i>T</i>. The loss formula is:</p>
+              <ul>
+                <li>L = (1 - &alpha;) &middot; L<sub>C</sub>(y, <span style="position: relative; display: inline-block;"><span style="position: absolute; left: 50%; transform: translateX(-50%) translateY(-0.2em);">&circ;</span>y</span>) + &alpha; &middot; T<sup>2</sup> &middot; D<sub>KL</sub>(p, q)</p></li> 
+              </ul> 
+            </li>      
+            <li>
+                <strong>"Mixup" Method for Data Generation (Mixup):</strong>
+                <p>This strategy improves knowledge distillation performance by creating new training samples through the linear interpolation of image and label pairs. Given two samples <i>(x<sub>i</sub>, y<sub>i</sub>)</i> and <i>(x<sub>j</sub>, y<sub>j</sub>)</i>, it generates:</p>
+                <ul>
+                  <li><span style="position: relative; display: inline-block;"><span style="position: absolute; left: 0%; transform: translateY(-0.4em);">~</span><i>x</i></span> = &lambda;x<sub>i</sub> + (1 - &lambda;)x<sub>j</sub></li>
+                  <li><span style="position: relative; display: inline-block;"><span style="position: absolute; left: 0%; transform: translateY(-0.4em);">~</span><i>y</i></span> = &lambda;y<sub>i</sub> + (1 - &lambda;)y<sub>j</sub></li>
+                </ul>                  
               </li>
               <li>
-                  <strong>Vanilla Knowledge Distillation:</strong>
-                  <p>Achieved 91.52% accuracy using cross-entropy loss for logit alignment between ResNet50 teacher and ResNet18 student.</p>
+              <p><strong>Deep Mutual Learning (DML):</strong> 
+                <p>This strategy utilizes two ResNet18 student models with different initial weights: one pretrained on CIFAR-10/CIFAR-100 and another with ImageNet-derived weights. This approach promoted diverse learning outcomes and speed up knowledge acquisition, particularly reducing training time for the CIFAR-pretrained model.</p>
+                <p>During training, we optimized both models, <i>&Theta;<sub>1</sub></i> and <i>&Theta;<sub>2</sub></i>, with respective loss functions were:</p>                
+              <ul>
+                <li><i>L<sub>&Theta;<sub>1</sub></sub></i> = L<sub>C<sub>1</sub></sub> + D<sub>KL</sub>(p<sub>2</sub> &parallel; p<sub>1</sub>)</li>
+                <li><i>L<sub>&Theta;<sub>2</sub></sub></i> = L<sub>C<sub>2</sub></sub> + D<sub>KL</sub>(p<sub>1</sub> &parallel; p<sub>2</sub>)</li>
+              </ul>
               </li>
               <li>
-                  <strong>Deep Mutual Learning:</strong>
-                  <p>Co-trained dual ResNet18 students (default vs pretrained initialization) with QAT-layer fusion, achieving mutual performance boost through 200-epoch interaction.</p>
-              </li>
-              <li>
-                  <strong>Decoupled Knowledge Distillation:</strong>
-                  <p>Separated loss into target-class (TCKD) and non-target-class (NCKD) components, optimizing via α=2/β=10 parameters for 90.64% accuracy.</p>
+                  <strong>Decoupled Knowledge Distillation (DKD):</strong>
+                  <p>This strategy divides the distillation loss into two key components:</p>
+                  <ul>
+                    <li>Target Class Knowledge Distillation (TCKD): Focuses on aligning the student's predicted probability for the correct class with that of the teacher, ensuring accurate classification learning.</li>
+                    <li>Non-Target Class Knowledge Distillation (NCKD): Aims to match the student's predicted probabilities for incorrect classes to the teacher's, enhancing overall probability distribution accuracy.</li>
+                  </ul>
+                  <p></p>The loss functions for these components are optimized using parameters &alpha; and &beta;, represented by the formula:
+                  <ul>
+                    <li>L = &alpha; &middot; L<sub>TCKD</sub>(p<sub>correct</sub>, q<sub>correct</sub>) + &beta; &middot; L<sub>NCKD</sub>(p<sub>incorrect</sub>, q<sub>incorrect</sub>)</li>
+                  </ul>
               </li>
           </ul>
           <h4>Post-Training Quantization</h4>
           <ul>
               <li>
                   <strong>GPFQ (Greedy Post-Training Feature Quantization):</strong>
-                  <p>Applied greedy layer-wise quantization guided by accuracy impact analysis, compressing model while maintaining performance.</p>
+                  <p>This strategy utilizes greedy layer-wise quantization guided by accuracy impact analysis, compressing model while maintaining performance.</p>
               </li>
           </ul>
         </div>
@@ -319,19 +350,179 @@ strategy that systematically integrates knowledge distillation and post-training
 
 
 <!-- Paper result -->
-<section class="hero is-small is-light">
+<section class="hero is-small is-small">
   <div class="hero-body">
     <div class="container">
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
           <h2 class="title is-3">Experiment Results</h2>
           <div class="content has-text-justified">
-          <p> Our experiments demonstrate that the distilled ResNet18 student maintains superior accuracy under aggressive quantization compared to the baseline ResNet18. At
-            8-bit precision, the distilled model achieves 89.7% accuracy (vs. 85.2% for vanilla
-            ResNet18), preserving 98% of its original performance. Notably, even when compressed to 4-bit (0.3MB storage), the distilled model retains 82.4% accuracy - a 6.3%
-            absolute improvement over the non-distilled counterpart at equivalent bit-width. This
-            resilience validates that knowledge distillation creates quantization-friendly representations, where the student’s learned feature hierarchy withstands precision reduction
-            better than standard-trained models.</p>
+          <p> Our experimental findings present the performance of quantized student models, employing various knowledge distillation techniques, and a quantized teacher model across a range of bit sizes (2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 26, 32).</p>
+            <style>
+              table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  margin: 20px 0;
+                  font-family: Arial, sans-serif;
+              }
+              th, td {
+                  padding: 8px;
+                  text-align: center;
+                  border-bottom: 1px solid #ddd;
+              }
+              th {
+                  background-color: #f2f2f2;
+              }
+              tr:hover {background-color: #f5f5f5;}
+          </style>
+            <h3>CIFAR-10</h3>
+            <table>
+                <tr>
+                    <th>Model</th>
+                    <th>2-bit</th>
+                    <th>3-bit</th>
+                    <th>4-bit</th>
+                    <th>5-bit</th>
+                    <th>6-bit</th>
+                    <th>7-bit</th>
+                    <th>8-bit</th>
+                    <th>32-bit</th>
+                </tr>
+                <tr>
+                    <td>Teacher</td>
+                    <td>90.90</td>
+                    <td>91.29</td>
+                    <td>91.55</td>
+                    <td>91.60</td>
+                    <td>91.88</td>
+                    <td>91.88</td>
+                    <td>92.00</td>
+                    <td>92.25</td>
+                </tr>
+                <tr>
+                    <td>VKD Student</td>
+                    <td>71.87</td>
+                    <td>82.40</td>
+                    <td>86.47</td>
+                    <td>88.78</td>
+                    <td>88.89</td>
+                    <td>89.36</td>
+                    <td>89.69</td>
+                    <td>90.77</td>
+                </tr>
+                <tr>
+                    <td>Mixup Student</td>
+                    <td>88.12</td>
+                    <td>92.63</td>
+                    <td>94.20</td>
+                    <td>95.09</td>
+                    <td>95.21</td>
+                    <td>95.18</td>
+                    <td>95.45</td>
+                    <td>95.77</td>
+                </tr>
+                <tr>
+                    <td>DML Student</td>
+                    <td>82.39</td>
+                    <td>86.98</td>
+                    <td>90.45</td>
+                    <td>91.84</td>
+                    <td>92.00</td>
+                    <td>92.43</td>
+                    <td>92.54</td>
+                    <td>92.89</td>
+                </tr>
+                <tr>
+                    <td>DKD Student</td>
+                    <td>61.06</td>
+                    <td>69.69</td>
+                    <td>77.69</td>
+                    <td>81.76</td>
+                    <td>83.45</td>
+                    <td>84.16</td>
+                    <td>84.39</td>
+                    <td>89.95</td>
+                </tr>
+            </table> 
+            <h3>CIFAR-100</h3> 
+            <table>
+              <tr>
+                  <th>Model</th>
+                  <th>2-bit</th>
+                  <th>3-bit</th>
+                  <th>4-bit</th>
+                  <th>5-bit</th>
+                  <th>6-bit</th>
+                  <th>7-bit</th>
+                  <th>8-bit</th>
+                  <th>32-bit</th>
+              </tr>
+              <tr>
+                  <td>Teacher</td>
+                  <td>66.63</td>
+                  <td>74.17</td>
+                  <td>75.06</td>
+                  <td>75.84</td>
+                  <td>75.73</td>
+                  <td>75.78</td>
+                  <td>75.80</td>
+                  <td>76.43</td>
+              </tr>
+              <tr>
+                  <td>VKD Student</td>
+                  <td>26.23</td>
+                  <td>47.65</td>
+                  <td>59.75</td>
+                  <td>65.93</td>
+                  <td>68.70</td>
+                  <td>69.85</td>
+                  <td>70.54</td>
+                  <td>75.33</td>
+              </tr>
+              <tr>
+                  <td>Mixup Student</td>
+                  <td>33.07</td>
+                  <td>46.50</td>
+                  <td>57.10</td>
+                  <td>60.33</td>
+                  <td>61.83</td>
+                  <td>61.77</td>
+                  <td>62.16</td>
+                  <td>62.17</td>
+              </tr>
+              <tr>
+                  <td>DML Student</td>
+                  <td>19.22</td>
+                  <td>37.06</td>
+                  <td>52.96</td>
+                  <td>62.94</td>
+                  <td>65.98</td>
+                  <td>69.89</td>
+                  <td>70.87</td>
+                  <td>75.12</td>
+              </tr>
+              <tr>
+                  <td>DKD Student</td>
+                  <td>22.20</td>
+                  <td>33.11</td>
+                  <td>44.78</td>
+                  <td>49.76</td>
+                  <td>52.20</td>
+                  <td>52.76</td>
+                  <td>52.85</td>
+                  <td>58.01</td>
+              </tr>
+          </table>        
+            <div id="results-carousel" class="carousel results-carousel">
+              <div class="item">
+                <!-- Adjust the image size using inline CSS -->
+                <img src="static/images/fig1-100.png" alt="cifar100 result" style="max-width: 70%; height: auto; display: block; margin: 0 auto;">
+              </div>
+              <div class="item">
+                <!-- Adjust the image size using inline CSS -->
+                <img src="static/images/fig2-100.png" alt="cifar100 result" style="max-width: 70%; height: auto; display: block; margin: 0 auto;">
+              </div>
+            </div>            
           </div>
         </div>
       </div>
@@ -340,32 +531,79 @@ strategy that systematically integrates knowledge distillation and post-training
 </section>
 <!-- End result -->
 
-
-<!--BibTex citation -->
-  <section class="section" id="BibTeX">
-    <div class="container is-max-desktop content">
-      <h2 class="title">BibTeX</h2>
-      <pre><code>BibTex Code Here</code></pre>
-    </div>
-</section>
-<!--End BibTex citation -->
-
-
-  <footer class="footer">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-          <p>
-            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
-            You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
+<!-- Paper result -->
+<section class="section hero is-light">
+    <div class="container">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+        <h2 class="title is-3">Conclusion</h2>
+          <div class="content has-text-justified">
+              <strong>CIFAR-100:</strong>
+              <ul>
+                  <li>At 2–6 bits, all students initially drop in accuracy more sharply than the teacher.</li>
+                  <li>Distillation aids complex datasets but reduces compressibility for further quantization.</li>
+              </ul>
+          
+              <strong>CIFAR-10:</strong>
+              <ul>
+                  <li>At 2–4 bits, all students see a sharper accuracy drop.</li>
+                  <li>Both models are robust at higher bit widths, with distillation helping the student nearly match its pre-quantization accuracy.</li>
+              </ul>
+          
+              <p>Overall, the quantized teacher model outperforms the quantized student model, particularly at small bit sizes, such as 2 bits. However, this advantage diminishes when applied to less complex datasets.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</footer>
+</section>
+<!-- End result -->
+
+<section class="section" id="BibTeX">
+  <div class="container">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Reference</h2>
+        <div class="content has-text-justified">
+        <div class="references">
+          <ol>
+              <li>
+                  Cristian Bucilǎ, Rich Caruana, and Alexandru Niculescu-Mizil, "Model compression," in <em>Proceedings of the 12th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, ACM, New York, NY, USA, 2006, pp. 535–541. <a href="https://doi.org/10.1145/1150402.1150464">https://doi.org/10.1145/1150402.1150464</a>
+              </li>
+              <li>
+                  Geoffrey E. Hinton, Oriol Vinyals, and Jeffrey Dean, "Distilling the Knowledge in a Neural Network," <em>CoRR</em>, vol. abs/1503.02531, 2015. <a href="http://arxiv.org/abs/1503.02531">http://arxiv.org/abs/1503.02531</a>
+              </li>
+              <li>
+                  Adriana Romero et al., "FitNets: Hints for Thin Deep Nets," <em>3rd International Conference on Learning Representations, ICLR 2015</em>, San Diego, CA, USA, 2015. <a href="http://arxiv.org/abs/1412.6550">http://arxiv.org/abs/1412.6550</a>
+              </li>
+              <li>
+                  Wonpyo Park et al., "Relational Knowledge Distillation," 2019. <a href="https://arxiv.org/abs/1904.05068">https://arxiv.org/abs/1904.05068</a>
+              </li>
+              <li>
+                  Ahmed T. Elthakeb et al., "Divide and Conquer: Leveraging Intermediate Feature Representations for Quantized Training of Neural Networks," 2020. <a href="https://arxiv.org/abs/1906.06033">https://arxiv.org/abs/1906.06033</a>
+              </li>
+              <li>
+                  Lingyu Gu et al., "\"Lossless\" Compression of Deep Neural Networks: A High-dimensional Neural Tangent Kernel Approach," 2024. <a href="https://arxiv.org/abs/2403.00258">https://arxiv.org/abs/2403.00258</a>
+              </li>
+              <li>
+                  Jinjie Zhang et al., "Post-training Quantization for Neural Networks with Provable Guarantees," 2023. <a href="https://arxiv.org/abs/2201.11113">https://arxiv.org/abs/2201.11113</a>
+              </li>
+              <li>
+                  Ying Zhang et al., "Deep Mutual Learning," 2017. <a href="https://arxiv.org/abs/1706.00384">https://arxiv.org/abs/1706.00384</a>
+              </li>
+              <li>
+                  Lucas Beyer et al., "Knowledge distillation: A good teacher is patient and consistent," 2022. <a href="https://arxiv.org/abs/2106.05237">https://arxiv.org/abs/2106.05237</a>
+              </li>
+              <li>
+                  Borui Zhao et al., "Decoupled Knowledge Distillation," 2022. <a href="https://arxiv.org/abs/2203.08679">https://arxiv.org/abs/2203.08679</a>
+              </li>
+          </ol>
+        </div>    
+      </div>
+    </div>
+  </div>
+</div>
+</section>
 
 <!-- Statcounter tracking code -->
 <!-- End of Statcounter Code -->
